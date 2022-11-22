@@ -1,0 +1,50 @@
+services:
+  nginx1:
+    image: nginx
+    container_name: nginx1
+    tty: true
+    ports:
+      - "8000:80"
+    restart: always
+
+  nginx2:
+    image: nginx
+    container_name: nginx2
+    tty: true
+    ports:
+      - "8001:80"
+    restart: always
+
+  php1:
+    build:
+      context: .
+    container_name: PHP1
+    tty: true
+    restart: always
+    ports:
+      - "8800:80"
+
+  php2:
+    build:
+      context: .
+    container_name: PHP2
+    tty: true
+    restart: always
+    ports:
+      - "8900:80"
+
+  mysqlbdd:
+    image: mysql
+    container_name: DB_mysql
+    tty: true
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    restart: always
+
+  ansible:
+    image: webdevops/ansible
+    container_name: ansible_automation
+    tty: true
+    restart: always
