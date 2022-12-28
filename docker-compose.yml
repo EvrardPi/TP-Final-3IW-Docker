@@ -1,25 +1,29 @@
 services:
   php1:
     build:
-      context: .
+      context: ./laravel/
     container_name: PHP1
     tty: true
     restart: always
     ports:
       - "8800:80"
+    depends_on:
+      - db
 
   php2:
     build:
-      context: .
+      context: ./laravel/
     container_name: PHP2
     tty: true
     restart: always
     ports:
       - "8900:80"
+    depends_on:
+      - db
 
-  mysqlbdd:
+  db:
+    container_name: DB
     image: mysql
-    container_name: DB_mysql
     tty: true
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -29,9 +33,14 @@ services:
     ports:
       - "3306:3306"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   ansible:
-    image: webdevops/ansible
+    build:
+      context: ./ansible/
     container_name: ansible
     tty: true
     restart: always
